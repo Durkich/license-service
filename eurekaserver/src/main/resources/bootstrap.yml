@@ -1,7 +1,6 @@
 spring:
+  application:
+    name: license-eurekaserver
   cloud:
     config:
-      uri: http://${CONFIGSERVER_URI:localhost}:${CONFIGSERVER_PORT:8071}
-    loadbalancer:
-      ribbon:
-        enabled: false
+      uri: http://license-configserver:8071

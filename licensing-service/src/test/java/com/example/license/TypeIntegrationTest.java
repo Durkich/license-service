@@ -46,7 +46,7 @@ public class TypeIntegrationTest {
     @BeforeEach
     public void setUp() {
         newType = new Type();
-        newType.setName("Пример типа лицензии");
+        newType.setName("bebebeb");
     }
 
     @Test
@@ -56,7 +56,7 @@ public class TypeIntegrationTest {
 
         Type foundType = typeRepository.findById(savedType.getId()).orElse(null);
         assertThat(foundType).isNotNull();
-        assertThat(foundType.getName()).isEqualTo("Пример типа лицензии");
+        assertThat(foundType.getName()).isEqualTo("bebebeb");
     }
 
     @Test
@@ -74,11 +74,11 @@ public class TypeIntegrationTest {
         entityManager.flush();
 
         Type foundType = typeRepository.findById(savedType.getId()).orElse(null);
-        foundType.setName("Еще один тип");
+        foundType.setName("пїЅпїЅпїЅ пїЅпїЅпїЅпїЅ пїЅпїЅпїЅ");
         Type updatedType = entityManager.persist(foundType);
         entityManager.flush();
 
-        assertThat(updatedType.getName()).isEqualTo("Еще один тип");
+        assertThat(updatedType.getName()).isEqualTo("bebebeb);
     }
 
     @Test

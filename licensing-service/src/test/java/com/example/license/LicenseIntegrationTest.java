@@ -32,7 +32,7 @@ public class LicenseIntegrationTest {
     @BeforeEach
     public void setUp() {
         newLicense = new License();
-        newLicense.setNamePo("Пример лицензии");
+        newLicense.setNamePo("bebebeb");
         newLicense.setStartDate(LocalDate.now());
         newLicense.setEndDate(LocalDate.now().plusYears(1));
         newLicense.setCount(100);
@@ -48,7 +48,7 @@ public class LicenseIntegrationTest {
 
         License foundLicense = licenseRepository.findById(savedLicense.getId()).orElse(null);
         assertThat(foundLicense).isNotNull();
-        assertThat(foundLicense.getNamePo()).isEqualTo("Пример лицензии");
+        assertThat(foundLicense.getNamePo()).isEqualTo("bebebeb");
     }
 
     @Test

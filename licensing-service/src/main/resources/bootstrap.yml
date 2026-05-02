@@ -1,6 +1,11 @@
 spring:
+  application:
+    name: licensing-service
   cloud:
     config:
-      uri: http://${CONFIGSERVER_URI:localhost}:${CONFIGSERVER_PORT:8071}
+      uri: http://license-configserver:8071
+      fail-fast: true
   profiles:
     active: dev
+  mvc:
+    static-path-pattern: /static/**

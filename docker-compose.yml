@@ -2,76 +2,66 @@ version: '2.1'
 services:
   database:
     image: "postgres:latest"
-    container_name: database
+    container_name: license-database
     ports:
-      - "5432:5432"
-
+      - "5433:5432"
     environment:
       POSTGRES_USER: "postgres"
       POSTGRES_PASSWORD: "123456"
       POSTGRES_DB: "license-service"
-
     volumes:
       - ./init.sql:/docker-entrypoint-initdb.d/1-init.sql
       - ./data.sql:/docker-entrypoint-initdb.d/2-data.sql
-
     networks:
-      backend:
+      license-backend:
         aliases:
-          - "database"
-
+          - "license-database"
     healthcheck:
-      test: [ "CMD-SHELL", "pg_isready -U postgres" ]
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
       interval: 10s
       timeout: 5s
       retries: 5
 
   configserver:
-    image: oda/configserver:0.0.1-SNAPSHOT
-    container_name: configserver
+    image: kalabekov/license-configserver:0.0.1-SNAPSHOT
+    container_name: license-configserver
     ports:
-      - "8071:8071"
-
+      - "8073:8071"
     networks:
-      backend:
+      license-backend:
         aliases:
-          - "configserver"
+          - "license-configserver"
 
   eurekaserver:
-    image: oda/eurekaserver:0.0.1-SNAPSHOT
-    container_name: eurekaserver
+    image: kalabekov/license-eurekaserver:0.0.1-SNAPSHOT
+    container_name: license-eurekaserver
     ports:
-      - "8070:8070"
-
+      - "8074:8070"
     environment:
-      CONFIGSERVER_URI: "configserver"
-      CONFIGSERVER_PORT: "8071"
-
+      CONFIGSERVER_URI: "license-configserver"
+      CONFIGSERVER_PORT: "8073"
     depends_on:
       database:
         condition: service_healthy
       configserver:
         condition: service_started
-
     networks:
-      backend:
+      license-backend:
         aliases:
-          - "eurekaserver"
+          - "license-eurekaserver"
 
   gatewayserver:
-    image: oda/gatewayserver:0.0.1-SNAPSHOT
-    container_name: gatewayserver
+    image: kalabekov/license-gatewayserver:0.0.1-SNAPSHOT
+    container_name: license-gatewayserver
     ports:
-      - "8072:8072"
-
+      - "8075:8072"
     environment:
       PROFILE: "default"
-      SERVER_PORT: "8072"
-      CONFIGSERVER_URI: "configserver"
-      CONFIGSERVER_PORT: "8071"
-      EUREKASERVER_URI: "http://eurekaserver:8070/eureka/"
-      EUREKASERVER_PORT: "8070"
-
+      SERVER_PORT: "8075"
+      CONFIGSERVER_URI: "license-configserver"
+      CONFIGSERVER_PORT: "8073"
+      EUREKASERVER_URI: "http://license-eurekaserver:8074/eureka/"
+      EUREKASERVER_PORT: "8074"
     depends_on:
       database:
         condition: service_healthy
@@ -79,61 +69,58 @@ services:
         condition: service_started
       eurekaserver:
         condition: service_started
-
     networks:
-      backend:
+      license-backend:
         aliases:
-          - "gatewayserver"
+          - "license-gatewayserver"
 
   licensing-service:
-    image: oda/licensing-service:0.0.1-SNAPSHOT
+    image: kalabekov/licensing-service:0.0.1-SNAPSHOT
     container_name: licensing-service
     ports:
-      - "8081:8081"
-
+      - "8082:8081"
     environment:
       PROFILE: "dev"
-      CONFIGSERVER_URI: "configserver"
-      CONFIGSERVER_PORT: "8071"
-      DATABASESERVER_PORT: "5432"
-      SPRING_DATASOURCE_URL: jdbc:postgresql://database:5432/license-service
+      CONFIGSERVER_URI: "license-configserver"
+      CONFIGSERVER_PORT: "8073"
+      DATABASESERVER_PORT: "5433"
+      SPRING_DATASOURCE_URL: jdbc:postgresql://license-database:5432/license-service
       SPRING_DATASOURCE_USERNAME: postgres
       SPRING_DATASOURCE_PASSWORD: 123456
-
-
     depends_on:
       database:
         condition: service_healthy
       configserver:
         condition: service_started
-
+      eurekaserver:
+        condition: service_started
     networks:
-      - backend
+      - license-backend
 
   keycloak:
     image: quay.io/keycloak/keycloak:24.0.4
-    container_name: keycloak
-    command: [ "start-dev", "--import-realm" ]
+    container_name: license-keycloak
+    command: ["start-dev", "--import-realm"]
     environment:
       KEYCLOAK_ADMIN: admin
       KEYCLOAK_ADMIN_PASSWORD: admin
-
     ports:
-      - "8080:8080"
-
+      - "8083:8080"
     volumes:
+      - ./license-realm.json:/opt/keycloak/data/import/realm.json:ro
       - ./keycloak-custom-theme-master/themes/custom-theme/theme:/opt/keycloak/themes
       - ./docker/keycloak/realms/:/opt/keycloak/data/import/
-
     networks:
-      backend:
+      license-backend:
         aliases:
-          - "keycloak"
+          - "license-keycloak"
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
 
 networks:
-  backend:
+  license-backend:
     driver: bridge
 
 volumes:
-  db-data:
+  license-db-data:
     driver: local

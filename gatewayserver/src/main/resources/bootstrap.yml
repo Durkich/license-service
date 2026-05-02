@@ -1,4 +1,7 @@
 spring:
+  application:
+    name: license-gatewayserver
   cloud:
     config:
-      uri: http://${CONFIGSERVER_URI:localhost}:${CONFIGSERVER_PORT:8071}
+      uri: http://license-configserver:8071
+      fail-fast: true
