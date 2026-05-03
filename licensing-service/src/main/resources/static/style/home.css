@@ -42,3 +42,35 @@
   font-weight: 700;
   margin: -135px 102px 0 186px;
 }
+html, body {
+  height: 100%;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+
+.u-header {
+  flex-shrink: 0;
+}
+
+.u-section-1 {
+  flex: 1;
+  margin-bottom: 0;
+}
+
+.u-footer {
+  margin-top: auto;
+  flex-shrink: 0;
+}
+
+footer {
+  margin-top: auto !important;
+  position: relative;
+  bottom: 0;
+  width: 100%;
+}

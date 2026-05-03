@@ -483,3 +483,12 @@
      width: 340px;
    }
  }
+
+ .u-section-1 {
+   min-height: 100vh !important;
+ }
+
+ .u-section-1 .u-layout-cell-1,
+ .u-section-1 .u-layout-cell-2 {
+   min-height: 100vh !important;
+ }

@@ -88,11 +88,11 @@
                   <p class="u-align-center u-form-group u-form-text u-large-text u-text u-text-variant u-text-10"> Нет нужного типа лицензии? <a th:href="@{/types/create}" style="color: #353980">Добавьте прямо сейчас</a></p>
                   <div class="u-form-group u-form-partition-factor-2 u-label-top">
                     <label for="message-50cf" class="u-block-3e25-69 u-custom-font u-field-label u-font-montserrat" style="font-weight: 700">Начало активации</label>
-                    <input th:field="*{startDate}" type="text" placeholder="Введите дату активации лицензии" rows="4" cols="50" id="message-50cf" name="startDate" class="u-custom-font u-field-input u-font-montserrat u-input u-input-rectangle u-radius u-input-3" required="required">
+                    <input th:field="*{startDate}" type="date" placeholder="Введите дату активации лицензии" rows="4" cols="50" id="message-50cf" name="startDate" class="u-custom-font u-field-input u-font-montserrat u-input u-input-rectangle u-radius u-input-3" required="required">
                   </div>
                   <div class="u-form-group u-form-partition-factor-2 u-label-top">
                     <label for="email-50cf" class="u-custom-font u-font-montserrat u-label u-label-3">Окончание активации</label>
-                    <input th:field="*{endDate}" type="text" placeholder="Введите дату окончания срока лицензии" id="email-50cf" name="endDate" class="u-custom-font u-font-montserrat u-input u-input-rectangle u-radius u-input-4" required="required">
+                    <input th:field="*{endDate}" type="date" placeholder="Введите дату окончания срока лицензии" id="email-50cf" name="endDate" class="u-custom-font u-font-montserrat u-input u-input-rectangle u-radius u-input-4" required="required">
                   </div>
                   <div class="u-form-group u-form-partition-factor-2 u-label-top">
                     <label for="text-940d" class="u-custom-font u-font-montserrat u-label u-label-4">Лицензий всего</label>

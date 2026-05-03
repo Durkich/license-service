@@ -1,0 +1,107 @@
+{
+  "realm": "security-licensing-service",
+  "enabled": true,
+  "displayName": "License Service Realm",
+  "accessTokenLifespan": 300,
+  "ssoSessionIdleTimeout": 3600,
+  "ssoSessionMaxLifespan": 36000,
+  "roles": {
+    "realm": [
+      {
+        "name": "USER",
+        "description": "User role - can view licenses and types"
+      },
+      {
+        "name": "ADMIN",
+        "description": "Admin role - can create, update, delete licenses and types"
+      }
+    ]
+  },
+  "users": [
+    {
+      "username": "test_user",
+      "enabled": true,
+      "email": "test@licenseservice.com",
+      "emailVerified": true,
+      "firstName": "Test",
+      "lastName": "User",
+      "credentials": [
+        {
+          "type": "password",
+          "value": "password",
+          "temporary": false
+        }
+      ],
+      "realmRoles": ["USER", "ADMIN"]
+    },
+    {
+      "username": "regular_user",
+      "enabled": true,
+      "email": "user@licenseservice.com",
+      "emailVerified": true,
+      "firstName": "Regular",
+      "lastName": "User",
+      "credentials": [
+        {
+          "type": "password",
+          "value": "password",
+          "temporary": false
+        }
+      ],
+      "realmRoles": ["USER"]
+    }
+  ],
+  "clients": [
+    {
+      "clientId": "licensing-service",
+      "enabled": true,
+      "publicClient": true,
+      "redirectUris": [
+        "http://localhost:8082/*",
+        "http://localhost:8075/*",
+        "http://licensing-service:8081/*",
+        "http://host.docker.internal:8082/*",
+        "http://license-gatewayserver:8072/*"
+      ],
+      "webOrigins": ["+"],
+      "directAccessGrantsEnabled": true,
+      "standardFlowEnabled": true,
+      "implicitFlowEnabled": false,
+      "serviceAccountsEnabled": false,
+      "protocolMappers": [
+        {
+          "name": "realm-roles",
+          "protocol": "openid-connect",
+          "protocolMapper": "oidc-usermodel-realm-role-mapper",
+          "consentRequired": false,
+          "config": {
+            "userinfo.token.claim": "true",
+            "multivalued": "true",
+            "claim.name": "realm_access.roles",
+            "jsonType.label": "String",
+            "access.token.claim": "true",
+            "id.token.claim": "true",
+            "introspection.token.claim": "true",
+            "claim.value": "realm.roles"
+          }
+        },
+        {
+          "name": "roles",
+          "protocol": "openid-connect",
+          "protocolMapper": "oidc-usermodel-realm-role-mapper",
+          "consentRequired": false,
+          "config": {
+            "userinfo.token.claim": "true",
+            "multivalued": "true",
+            "claim.name": "roles",
+            "jsonType.label": "String",
+            "access.token.claim": "true",
+            "id.token.claim": "true",
+            "introspection.token.claim": "true"
+          }
+        }
+      ]
+    }
+  ],
+  "keycloakVersion": "24.0.4"
+}
