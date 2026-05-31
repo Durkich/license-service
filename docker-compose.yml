@@ -117,10 +117,27 @@ services:
     extra_hosts:
       - "host.docker.internal:host-gateway"
 
+  metabase-license:
+    image: metabase/metabase:latest
+    container_name: metabase-license
+    ports:
+      - "3002:3000"
+    environment:
+      MB_DB_FILE: /metabase.db/metabase.db
+    volumes:
+      - metabase-license-data:/metabase.db
+    networks:
+      - license-backend
+    depends_on:
+      database:
+        condition: service_healthy
+
 networks:
   license-backend:
     driver: bridge
 
 volumes:
   license-db-data:
+    driver: local
+  metabase-license-data:
     driver: local

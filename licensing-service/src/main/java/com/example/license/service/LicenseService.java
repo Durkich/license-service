@@ -1,5 +1,6 @@
 package com.example.license.service;
 
+import com.example.license.event.LicenseEvent;
 import com.example.license.model.License;
 import com.example.license.repository.LicenseRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -9,6 +10,9 @@ import org.springframework.stereotype.Service;
 public class LicenseService {
     @Autowired
     private LicenseRepository licenseRepository;
+
+    @Autowired
+    private EventPublisherService eventPublisher;
 
     public License getLicense(int licenseId){
         return licenseRepository.findById(licenseId).orElse(null);
@@ -24,6 +28,15 @@ public class LicenseService {
     public void createLicense(License license){
         if (license != null){
             licenseRepository.save(license);
+
+            LicenseEvent event = new LicenseEvent(
+                    "CREATE",
+                    license.getId(),
+                    license.getNamePo(),
+                    null,
+                    true
+            );
+            eventPublisher.publish(event);
         }
     }
 
@@ -37,12 +50,29 @@ public class LicenseService {
             existingLicense.setCountStart(license.getCountStart());
             existingLicense.setCountNow(license.getCountNow());
             licenseRepository.save(existingLicense);
+
+            LicenseEvent event = new LicenseEvent(
+                    "UPDATE",
+                    licenseId,
+                    license.getNamePo(),
+                    null,
+                    true
+            );
+            eventPublisher.publish(event);
             return true;
         }
         return false;
     }
 
     public void deleteLicense(License license){
+        LicenseEvent event = new LicenseEvent(
+                "DELETE",
+                license.getId(),
+                license.getNamePo(),
+                null,
+                false
+        );
+        eventPublisher.publish(event);
         licenseRepository.delete(license);
     }
 }

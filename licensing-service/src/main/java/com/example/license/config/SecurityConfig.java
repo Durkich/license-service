@@ -58,7 +58,7 @@ class SecurityConfig {
     public SecurityFilterChain resourceServerFilterChain(HttpSecurity http) throws Exception {
         http.authorizeHttpRequests(auth -> auth
                 .requestMatchers("/static/style/**", "/static/images/**", "/").permitAll()
-                .requestMatchers("/types", "/licenses").hasAnyRole("ADMIN", "USER")
+                .requestMatchers("/types", "/licenses", "/analytic").hasAnyRole("ADMIN", "USER")
                 .requestMatchers("/types/**", "/licenses/**").hasRole("ADMIN")
                 .anyRequest()
                 .authenticated());

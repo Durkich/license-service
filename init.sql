@@ -20,3 +20,13 @@ CREATE TABLE IF NOT EXISTS public.licenses
         ON UPDATE CASCADE
         ON DELETE CASCADE
 );
+CREATE TABLE IF NOT EXISTS outbox_events (
+    id BIGSERIAL PRIMARY KEY,
+    event_type VARCHAR(20),
+    license_id INT,
+    software_name VARCHAR(255),
+    software_version VARCHAR(100),
+    is_licensed BOOLEAN,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    sent BOOLEAN DEFAULT FALSE
+);
